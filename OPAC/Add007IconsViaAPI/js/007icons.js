@@ -20,11 +20,11 @@
                                   let the007t = the0070 + the0071 + the0074;
                                   console.log(the007t);
                                 if (the007t.indexOf('vds') > -1) {
-                                	$(`<span class="results_summary format_icon"><img src="https://raw.githubusercontent.com/jsonks/Koha-API-Scripts/main/OPAC-Media-Icons-via-007/img/BluRay.png" title="Bluray"></img></span>`).insertAfter( this_row.find('.results_summary.ratings') );
+                                	$(`<span class="results_summary format_icon"><img src="https://raw.githubusercontent.com/jsonks/Koha-Modifications/main/OPAC/Add007IconsViaAPI/img/BluRay.png" title="Bluray"></img></span>`).insertAfter( this_row.find('.results_summary.ratings') );
                                 } else  if (the007t.indexOf('vdv') > -1) {
-                                  $(`<span class="results_summary format_icon"><img src="https://raw.githubusercontent.com/jsonks/Koha-API-Scripts/main/OPAC-Media-Icons-via-007/img/DVD.png" title="DVD"></img></span>`).insertAfter( this_row.find('.results_summary.ratings') );
+                                  $(`<span class="results_summary format_icon"><img src="https://raw.githubusercontent.com/jsonks/Koha-Modifications/main/OPAC/Add007IconsViaAPI/img/DVD.png" title="DVD"></img></span>`).insertAfter( this_row.find('.results_summary.ratings') );
                                 } else  if (the007t.indexOf('vfb') > -1) {
-                                  $(`<span class="results_summary format_icon"><img src="https://raw.githubusercontent.com/jsonks/Koha-API-Scripts/main/OPAC-Media-Icons-via-007/img/VHS.png" title="VHS"></img></span>`).insertAfter( this_row.find('.results_summary.ratings') );
+                                  $(`<span class="results_summary format_icon"><img src="https://raw.githubusercontent.com/jsonks/Koha-Modifications/main/OPAC/Add007IconsViaAPI/img/VHS.png" title="VHS"></img></span>`).insertAfter( this_row.find('.results_summary.ratings') );
                                 }
                               }
                             });
