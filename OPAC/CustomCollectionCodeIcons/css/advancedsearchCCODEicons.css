@@ -1,0 +1,24 @@
+.colorize-green {
+  filter: brightness(2.4) sepia(1) hue-rotate(30deg) saturate(3);
+}
+
+.adv_icon_container {
+  position: relative;
+  width: 16.5em;
+  vertical-align: middle;
+  display: inline-block;
+  margin-bottom: 30%;
+  margin-left: -160px;
+}
+
+.adv_icon_container > img{
+  position: absolute;
+  top:0;
+  left:164px;
+  width: 35%;
+  height: auto;
+}
+
+.adv_icon_container > img:first-child{
+  z-index: 2;
+}
