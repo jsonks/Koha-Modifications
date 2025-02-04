@@ -1,20 +1,27 @@
 //----------Patron Messaging----------//
-  //Move Provider and Number above messaging preference table
-  if (window.location.href.indexOf("opac-messaging.pl") > -1) { 
+  if (window.location.href.indexOf("opac-messaging.pl") > -1) {
+    //Move Number above messaging preference table
     $('#usermessaging h1').after('<fieldset class="rows d-print-none"><ul id="sms_inputs"></ul></fieldset>');
-    $('#sms_provider_id').parent().appendTo('#sms_inputs');
     $('#SMSnumber').parent().appendTo('#sms_inputs');
+
+    //Change wording on help text
     $(".sms_number_help").text("Numbers must be entered as +1 followed by 10 digits, no spaces, no hyphens. Example: +16208887777");
+
+    //Add alert warning class to charges-may-apply message
     $("li:contains('Some charges for text messages')").wrapInner('<div class="alert alert-warning"></div>').appendTo('#sms_inputs');
+
+    //Add note about digesting by default
     $("table").after('<div style="font-size: smaller; text-align: center; margin-bottom: 14px; margin-top: -12px;"><em>To help avoid spam filters, digesting is enabled by default. This combines multiple similar messages into one message if possible.</em></div><div class="alert alert-primary" style="font-size: 90%; margin-bottom: -35px;">Opt out at any time by unchecking the boxes for corresponding messages.</div>');
-    
+
+    //Add explanations of each notice
     $("span:contains('Advance notice')").append(' - <em style="font-size: smaller;"> notice X days before item is due</em>');
     $("span:contains('Hold filled')").append(' - <em style="font-size: smaller;"> notice of holds available for pickup</em>');
     $("span:contains('Hold reminder')").append(' - <em style="font-size: smaller;"> notice of holds expiring soon</em>');
     $("span:contains('Item check-in')").append(' - <em style="font-size: smaller;"> notice of returned items that day</em>');
     $("span:contains('Item checkout and renewal')").append(' - <em style="font-size: smaller;"> notice of checkout or renew that day</em>');
     $("span:contains('Item due')").append(' - <em style="font-size: smaller;"> notice on day item is due</em>');
-    
+
+    //Hide option for auto renewals
     $("#auto_renewals_message").remove();
     
     //Change term 'SMS' to 'Text'
