@@ -1,5 +1,7 @@
 # Hotspot Tracker
 
+![hotspot tracker](https://raw.githubusercontent.com/jsonks/Koha-Modifications/refs/heads/main/Staff/Hotspot%20Tracker/hotspottracker.png)
+
 ## Purpose
 
 This leverages Koha's report templates to summarize hotspots in a dashboard format and give staff an easy way to track and manage individual devices.
