@@ -1,0 +1,200 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+[%- USE KohaDates -%]
+
+[% IF data.size %]
+
+<div id="hotspot-dashboard">
+<h2 style="font-size: 300%; text-align: center;"><i class="bi bi-fire gradient-icon"></i> Hotspot Management Dashboard <i class="bi bi-fire gradient-icon"></i></h2>
+<p class="alert alert-primary"><strong>Important:</strong> Service must be enabled/disabled with the service provider. This tool <u>only</u> toggles the status in Koha.</p>
+<table id="hotspots" class="table table-borderless table-striped">
+<thead>
+  <tr>
+    <th><i class="bi bi-toggles"></i></th>
+    <th>Service status</th>
+    <th>Hotspot details</th>
+    <th>Borrower</th>
+    <th>Date due</th>
+    <th>Overdue?</th>
+    <th>Days late</th>
+    <th style="display: none;">Flag</th>
+  </tr>
+</thead>
+<tbody>
+  [%
+    SET checkout_counter = 0;
+    SET overdue_counter = 0;
+    SET deactive_counter = 0;
+    SET total_counter = 0;
+
+
+    FOREACH b IN data %]
+  <tr data-bib="[% b.biblionumber %]" data-item="[% b.itemnumber%]" data-bcode="[% b.barcode %]">
+    <td class="action-cell" style="text-align: center;"></td>
+    <td class="status-label">[%  IF b.damaged == '3' %] <span class="inactive"><i class="bi bi-toggle-off"></i> Deactivated</span> [%  ELSIF b.damaged == '0' %] <span class="active"><i class="bi bi-toggle-on"></i> Active</span> [% END %]</td>
+    <td class="hotspot-info"><strong>[% b.itemcallnumber %]</strong> - <a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% b.biblionumber%]" target="_blank">[% b.barcode %]</a><br>[% b.itemnotes_nonpublic %]</td>
+    <td><a href="/cgi-bin/koha/circ/circulation.pl?borrowernumber=[% b.borrowernumber %]" target="_blank">[% b.borrower%]</a></td>
+    <td style="text-align: center;" >[% b.date_due | $KohaDates %] </td>
+    <td style="text-align: center;">[% b.overdue %]</td>
+    <td class="days-late" style="text-align: center;">[% b.days_overdue %]</td>
+    <td class="status" style="display: none;">[% b.damaged %]</td>
+
+    [% IF b.date_due %] [% SET checkout_counter = checkout_counter + 1; END; %]
+    [% IF b.overdue %]  [% SET overdue_counter = overdue_counter + 1; END %]
+    [% IF b.damaged == '3' %] [% SET deactive_counter = deactive_counter + 1; END %]
+    [% IF b.barcode %] [% SET total_counter = total_counter + 1; END; %]
+
+  </tr>
+  [% END %]
+</tbody>
+</table>
+[% END %]
+
+<ul id="hs-status-list">
+  <li class="alert alert-info"><p class="hs-status-count"> [% total_counter %]</p><span class="hs-status-label">Total hotspots</span></li>
+  <li class="alert alert-success"><p class="hs-status-count"> [% checkout_counter %]</p><span class="hs-status-label">Checked out</span></li>
+  <li class="alert alert-warning"><p class="hs-status-count"> [% overdue_counter %]</p><span class="hs-status-label">Overdue</span></li>
+  <li class="alert alert-danger" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Refresh page to update"><p class="hs-status-count"> [% deactive_counter %]</p><span class="hs-status-label">Deactivated</span></li>
+</ul>
+
+</div>
+
+
+<script>
+function addPutButtonsToTable(hotspots, apiEndpointBase) {
+    const table = document.getElementById(hotspots);
+    if (!table) {
+        console.error('Table element not found:', hotspots);
+        return;
+    }
+
+// Get all table body rows
+    const rows = table.querySelectorAll('tbody tr');
+
+    rows.forEach(row => {
+        // Create the button element
+        const button = document.createElement('button');
+        button.textContent = 'Toggle status';
+        button.className = 'put-button btn btn-default btn-xs';
+
+        // Add an event listener to the button
+        button.addEventListener('click', () => {
+            handlePutRequest(row, apiEndpointBase);
+        });
+
+        // Find the designated cell and append the button
+        // Assumes you have a cell with class 'action-cell' in each row
+        const actionCell = row.querySelector('.action-cell');
+        if (actionCell) {
+            actionCell.appendChild(button);
+        } else {
+            console.warn('Action cell not found for row:', row);
+        }
+    });
+}
+
+function handlePutRequest(row, apiEndpointBase) {
+    // 1. Extract data from the row
+    const id = row.getAttribute('data-bib'); // Use data attribute for ID
+    const id2 = row.getAttribute('data-item'); // Use data attribute for ID
+    const bcode = row.getAttribute('data-bcode'); // Use data attribute for ID
+    const currentStatus = row.querySelector('.status').textContent;
+
+    if (!id) {
+        alert('Could not determine item ID for this row.');
+        return;
+    }
+
+    // 2. Prepare the payload (example: toggle status 3 "Deactivated" on and off)
+    const newStatus = currentStatus === '0' ? '3' : '0';
+    const dataPayload = {
+        damaged_status: newStatus,
+    };
+
+    // 3. Construct the API URL
+    const apiUrl = `/api/v1/biblios/${id}/items/${id2}`;
+
+    // 4. Perform the PUT request
+    fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            // Add other headers like authorization tokens if needed
+        },
+        body: JSON.stringify(dataPayload),
+    })
+    .then(response => {
+        if (!response.ok) {
+            // Handle HTTP errors
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        //alert(`Successfully updated item ${bcode}!`);
+        // Update UI to reflect the new status immediately
+        row.querySelector('.status').textContent = newStatus;
+        if (newStatus == 0) {
+            row.querySelector('.status-label').innerHTML= `<span class="active"><i class="bi bi-toggle-on"></i> Active</span>`
+        } else if (newStatus == 3) {
+            row.querySelector('.status-label').innerHTML=  `<span class="inactive"><i class="bi bi-toggle-off"></i> Deactivated</span>`
+        }            
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Failed to update data. Check edit item permissions.');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    addPutButtonsToTable('hotspots', '');
+});
+
+const existingElement = document.getElementById('hotspots');
+const elementToInsert = document.getElementById('hs-status-list');
+existingElement.before(elementToInsert);
+
+</script>
+
+<style>
+#hotspot-dashboard {width: 85%;}
+#hotspots {border: 1px solid lightgray; width: 100%;}
+.active {color: green;}
+.inactive {color: darkred;}
+.active, .inactive {font-weight: bold; vertical-align: middle;}
+td {vertical-align: middle;}
+.status-label {min-width: 120px;}
+.days-late {font-weight: bold; color: darkred !important; text-align: center;}
+
+.gradient-icon {
+  background-image: linear-gradient(to bottom, var(--bs-orange), var(--bs-red) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: initial; 
+}
+
+#hs-status-list {
+display: flex;
+  list-style-type: none;
+  margin: 0; 
+  padding: 0; 
+  gap: 10px; 
+}
+
+
+#hs-status-list li {
+  text-align: center;
+  flex: 1;
+}
+
+.hs-status-count {font-weight: bold; font-size: 300%; margin-bottom: 0;}
+
+body {background-image: none !important;}
+aside {display: none;}
+#toolbar {display: none;}
+
+</style>
+
