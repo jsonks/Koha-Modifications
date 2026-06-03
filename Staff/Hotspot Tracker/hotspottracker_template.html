@@ -13,6 +13,7 @@
   <tr>
     <th><i class="bi bi-toggles"></i></th>
     <th>Service status</th>
+    <th>Withdrawn status</th>
     <th>Hotspot details</th>
     <th>Borrower</th>
     <th>Date due</th>
@@ -33,7 +34,17 @@
   <tr data-bib="[% b.biblionumber %]" data-item="[% b.itemnumber%]" data-bcode="[% b.barcode %]">
     <td class="action-cell" style="text-align: center;"></td>
     <td class="status-label">[%  IF b.damaged == '3' %] <span class="inactive"><i class="bi bi-toggle-off"></i> Deactivated</span> [%  ELSIF b.damaged == '0' %] <span class="active"><i class="bi bi-toggle-on"></i> Active</span> [% END %]</td>
-    <td class="hotspot-info"><strong>[% b.itemcallnumber %]</strong> - <a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% b.biblionumber%]" target="_blank">[% b.barcode %]</a><br>[% b.itemnotes_nonpublic %]</td>
+    <td class="withdrawn-status">
+<select class="form-select row-dropdown" name="withdrawn">
+  <option value="[% b.withdrawn %]">[% b.withdrawn_desc %]</option>
+  <hr>
+  <option value="0"></option>
+  <option value="1">Temporarily unavailable</option>
+  <option value="2">In repair</option>
+  <option value="3">Missing parts</option>
+</select>
+</td>
+    <td class="hotspot-info"><strong>[% b.itemcallnumber %]</strong> - <a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% b.biblionumber%]" target="_blank">[% b.barcode %]</a> <span class="badge rounded-pill text-bg-danger">[% b.lost_desc %]</span> <br>[% b.itemnotes_nonpublic %]</td>
     <td><a href="/cgi-bin/koha/circ/circulation.pl?borrowernumber=[% b.borrowernumber %]" target="_blank">[% b.borrower%]</a></td>
     <td style="text-align: center;" >[% b.date_due | $KohaDates %] </td>
     <td style="text-align: center;">[% b.overdue %]</td>
@@ -58,8 +69,41 @@
   <li class="alert alert-danger" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Refresh page to update"><p class="hs-status-count"> [% deactive_counter %]</p><span class="hs-status-label">Deactivated</span></li>
 </ul>
 
+<div id="toast-container" role="alert" aria-live="polite" aria-atomic="true"></div>
+
 </div>
 
+
+<script>
+function showToast(message) {
+  const container = document.getElementById('toast-container');
+  
+  // Create the toast element
+  const toast = document.createElement('div');
+  toast.classList.add('toasty');
+  toast.innerText = message;
+  
+  // Append to container
+  container.appendChild(toast);
+  
+  // Force a reflow to trigger the CSS transition
+  void toast.offsetWidth;
+  
+  // Add the class to fade/slide it in
+  toast.classList.add('show');
+  
+  // Automatically remove the toast after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    
+    // Wait for the transition to finish before removing from DOM
+    toast.addEventListener('transitionend', () => {
+      toast.remove();
+    });
+  }, 3000);
+}
+
+</script>
 
 <script>
 function addPutButtonsToTable(hotspots, apiEndpointBase) {
@@ -158,6 +202,52 @@ existingElement.before(elementToInsert);
 
 </script>
 
+<script>
+// Attach a single event listener to the table's tbody
+const tableBody = document.querySelector('#hotspots tbody');
+
+tableBody.addEventListener('change', async (event) => {
+  // Check if the changed element is a dropdown in a table row
+  if (event.target && event.target.classList.contains('row-dropdown')) {
+    const selectElement = event.target;
+    const row = selectElement.closest('tr');
+    
+    // Extract row-specific data
+    const id = row.getAttribute('data-bib'); // Use data attribute for ID
+    const id2 = row.getAttribute('data-item'); // Use data attribute for ID
+    const bcode = row.getAttribute('data-bcode'); // Use data attribute for ID
+    const newValue = selectElement.value;
+
+    try {
+      // Send the PUT request
+      const response = await fetch(`/api/v1/biblios/${id}/items/${id2}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          withdrawn: newValue
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(`Successfully updated row ${id}:`, result);
+      showToast('Status updated!')
+      
+    } catch (error) {
+      console.error('Failed to sync changes with API:', error);
+      // Optional: Revert the dropdown if the request failed
+    }
+  }
+});
+</script>
+
+
+
 <style>
 #hotspot-dashboard {width: 85%;}
 #hotspots {border: 1px solid lightgray; width: 100%;}
@@ -195,6 +285,32 @@ display: flex;
 body {background-image: none !important;}
 aside {display: none;}
 #toolbar {display: none;}
+
+#toast-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.toasty {
+  background-color: #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-family: sans-serif;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toasty.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 </style>
 
