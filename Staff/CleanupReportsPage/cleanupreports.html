@@ -1,0 +1,284 @@
+<style>
+    .bold {
+        font-weight: bold;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    #cleanup_reports-table {
+        font-size: 115%;
+    }
+
+    .cleanup_reports-button {
+        display: inline-block;
+        padding: 5px 15px;
+        font-size: medium;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .cleanup_reports-button:hover {
+        background-color: #5dec62;
+    }
+
+    .cleanup_reports-button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.24), 0 9px 25px 0 rgba(0, 0, 0, 0.19);
+        transform: translateY(4px);
+    }
+
+    .doclinks {
+        text-align: center;
+    }
+
+    a.gd {
+        background: rgba(0, 0, 0, 0) url("https://www.seknfind.org/images/c84ad0b13240cb5063e51cfc3aa9b65c_gddbsprite.png") no-repeat scroll 0 0;
+        display: inline-block;
+        height: 30px;
+        width: 31px;
+    }
+
+    a.db {
+        background: rgba(0, 0, 0, 0) url("https://www.seknfind.org/images/c84ad0b13240cb5063e51cfc3aa9b65c_gddbsprite.png") no-repeat scroll -32px 1px;
+        display: inline-block;
+        height: 30px;
+        width: 33px;
+    }
+</style>
+<hr />
+<div id="cleanup_reports-table">
+    <ul class="nav nav-tabs " role="tablist">
+        <li role="presentation" class="nav-item active"><a class="nav-link active" href="#tab5354737"
+                aria-controls="home" role="tab" data-toggle="tab" data-bs-toggle="tab">Circulation</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#tab4365124" aria-controls="home" role="tab"
+                data-toggle="tab" data-bs-toggle="tab">Cataloging</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#tab4637260" aria-controls="home" role="tab"
+                data-toggle="tab" data-bs-toggle="tab">Patrons</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="tab5354737">
+            <table class="cleanup_tab-table" style="margin: 20px;">
+                <tbody>
+                    <tr>
+                        <th>Report</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                        <th>Frequency</th>
+                        <th>Run</th>
+                        <th>Documentation</th>
+                    </tr>
+                    <tr>
+                        <td class="bold">Holds awaiting pickup</td>
+                        <td>Holds</td>
+                        <td>Holds that are 'Waiting' at your library.</td>
+                        <td>Use to remove unwanted holds. Be sure to check the item in again after you cancel the hold.
+                        </td>
+                        <td>Daily</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td class="doclinks"><a class="gd" target="_blank" href="#" rel="noopener"></a> <a class="db"
+                                target="_blank" href="#" rel="noopener"></a></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Items awaiting pickup AT other libraries</td>
+                        <td>Holds</td>
+                        <td>Your items waiting at other libraries.</td>
+                        <td>Track down items that have exceeded the 7-day waiting period. Check your library for these
+                            items before contacting the borrowing library.</td>
+                        <td>Daily</td>
+                        <td><a class="cleanup_reports-button"
+                                href="/cgi-bin/koha/reports/guided_reports.pl?id=2608&amp;op=run" target="_blank"
+                                rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Orphaned holds</td>
+                        <td>Holds</td>
+                        <td>Holds where items are no longer available.</td>
+                        <td>Remove the hold and look elsewhere for the item.</td>
+                        <td>Weekly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Transfers to receive</td>
+                        <td>Transfers</td>
+                        <td>Items on their way to your library that have not arrived yet.</td>
+                        <td>Investigate items that are taking longer than expected to arrive.</td>
+                        <td>Weekly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td class="doclinks"><a class="gd" target="_blank" href="#" rel="noopener"></a> <a class="db"
+                                target="_blank" href="#" rel="noopener"></a></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Old holds</td>
+                        <td>Holds</td>
+                        <td>Finds older holds that may need attention.</td>
+                        <td>Delete any unfillable holds and follow-up with patron; pursue items elsewhere if needed.
+                        </td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Transfers FROM your library</td>
+                        <td>Transfers</td>
+                        <td>Items departing your library that have not yet arrived at their destination.</td>
+                        <td>Check that the items on this report are truly in transit and not somewhere in your library.
+                        </td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Items 'Available' at the wrong library</td>
+                        <td>Transfers</td>
+                        <td>Items with the incorrect holding location that have fallen out of transit.</td>
+                        <td>Search for these items. If found, check in. For items that are 'lost and paid for', the
+                            cataloging may need adjusted.</td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Long overdues FROM other libraries</td>
+                        <td>Overdues</td>
+                        <td>Items owned by other libraries, long overdue to your patrons.</td>
+                        <td>Try to recover the item from the patron. Consider charging the patron for the item and
+                            reimbursing the lending library.</td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td class="doclinks"><a class="gd" target="_blank" href="#" rel="noopener"></a> <a class="db"
+                                target="_blank" href="#" rel="noopener"></a></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Long overdues AT other libraries</td>
+                        <td>Overdues</td>
+                        <td>Your items, long overdue to patrons at other libraries.</td>
+                        <td>Communicate with borrowing library. Request reimbursement if necessary.</td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Lost items AT other libraries</td>
+                        <td>Statuses</td>
+                        <td>Your items with lost statuses that appear to be at other libraries.</td>
+                        <td>Check to see if the item is at your library. If not, follow-up with other involved parties.
+                        </td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Lost items filtered by Lost status</td>
+                        <td>Statuses</td>
+                        <td>General <em>Lost</em> report.</td>
+                        <td>Review items in each lost status, search for items, check in if found.</td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Items with In Processing status</td>
+                        <td>Statuses</td>
+                        <td>Items that have had an <em>In processing</em> status for over 3 weeks.</td>
+                        <td>Locate these items and check them in to remove the status.</td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="tab4365124">
+            <table class="cleanup_tab-table" style="margin: 20px;">
+                <tbody>
+                    <tr>
+                        <th>Report</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                        <th>Frequency</th>
+                        <th class="sorttable_nosort">Run</th>
+                        <th class="sorttable_nosort">Documentation</th>
+                    </tr>
+                    <tr>
+                        <td class="bold">Bad barcodes</td>
+                        <td>Items</td>
+                        <td>Items with barcodes that won't work.</td>
+                        <td>Click the edit link and fix the barcode by pulling the item and rescanning it. Sometimes
+                            barcodes on this report appear correct - those usually have extra blank spaces.</td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Items with missing data</td>
+                        <td>Items</td>
+                        <td>Looks for blank shelf locations, collection codes, item types and barcodes.</td>
+                        <td>Click the edit link and fill in the missing data.</td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Mismatched ccode / shelf locations</td>
+                        <td>Items</td>
+                        <td>Looks for odd ccode/shelf location combinations.</td>
+                        <td>Make sure the ccode and/or shelf location are correct (sometimes they are), adjust if not.
+                        </td>
+                        <td>Monthly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="tab4637260">
+            <table class="cleanup_tab-table" style="margin: 20px;">
+                <tbody>
+                    <tr>
+                        <th>Report</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                        <th>Frequency</th>
+                        <th>Run</th>
+                        <th>Documentation</th>
+                    </tr>
+                    <tr>
+                        <td class="bold">Bad texting numbers</td>
+                        <td>Clean-up</td>
+                        <td>Patrons with invalid numbers for text messaging.</td>
+                        <td>Edit each account and adjust the number to the correct format (the full 10-digit number
+                            preceded by +1, i.e. +12223334444)</td>
+                        <td>Weekly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td class="doclinks"></td>
+                    </tr>
+                    <tr>
+                        <td class="bold">Patron Pruning</td>
+                        <td>Deletion</td>
+                        <td>Inactive patrons with clear accounts. No activity in the past 3 years. Excludes ILL and
+                            STAFF accounts.</td>
+                        <td>Download the report, delete out any patrons you want to keep, send the list of patrons to
+                            delete to SEK for batch deletion.</td>
+                        <td>Yearly</td>
+                        <td><a class="cleanup_reports-button" href="#" target="_blank" rel="noopener">Run</a></td>
+                        <td class="doclinks"><a class="gd" target="_blank" href="#" rel="noopener"></a> <a class="db"
+                                target="_blank" href="#" rel="noopener"></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
